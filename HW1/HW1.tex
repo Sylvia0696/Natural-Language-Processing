@@ -1,0 +1,128 @@
+% --------------------------------------------------------------
+% This is all preamble stuff that you don't have to worry about.
+% Head down to where it says "Start here"
+% --------------------------------------------------------------
+ 
+\documentclass[12pt]{article}
+ 
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\graphicspath{ {/Users/zhuangyuren/Downloads/D/ML2/HW0/} }
+\usepackage[linesnumbered,boxed]{algorithm2e}
+
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+ 
+\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{lemma}[2][Lemma]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{exercise}[2][Exercise]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{reflection}[2][Reflection]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{proposition}[2][Proposition]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+\newenvironment{corollary}[2][Corollary]{\begin{trivlist}
+\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
+ 
+\begin{document}
+ 
+% --------------------------------------------------------------
+%                         Start here
+% --------------------------------------------------------------
+ 
+%\renewcommand{\qedsymbol}{\filledbox}
+ 
+\title{COMS 4705: Natural Language Processing HW2}%replace X with the appropriate number
+% * <465193583@qq.com> 2018-09-27T02:33:46.626Z:
+%
+% ^.
+\author{Zhuangyu Ren(zr2209)\\ %replace with your name
+} %if necessary, replace with your course title
+ 
+\maketitle
+ \indent 
+\section*{Question 1}
+\begin{enumerate}
+	\item 
+	We know that
+	$$\frac{\mathrm{d} L(v)}{\mathrm{d} v_k}=\sum _{i=1}^nf_k(x_i,y_i)-\sum_{i=1}^{n}\sum_{y'\in \mathcal Y}f_k(x_i,y')p(y'|x_i;v)-2Cv_k$$
+	As $f_1$ and $f_2$ are identical, the value of 
+	$$\sum _{i=1}^nf_1(x_i,y_i)-\sum_{i=1}^{n}\sum_{y'\in \mathcal Y}f_1(x_i,y')p(y'|x_i;v)$$
+	and 
+	$$\sum _{i=1}^nf_2(x_i,y_i)-\sum_{i=1}^{n}\sum_{y'\in \mathcal Y}f_2(x_i,y')p(y'|x_i;v)$$
+	should be the same.\\
+	In log-linear model, we always want the gradient to be equal to 0, so $v_k^*$ should be equal to 
+	$$\sum _{i=1}^nf_k(x_i,y_i)-\sum_{i=1}^{n}\sum_{y'\in \mathcal Y}f_k(x_i,y')p(y'|x_i;v)$$
+	So $v_1^*$ and $v_2^*$ should also be equal as their formula have the same value.\\
+	
+	\item
+	Now we have
+	$$\frac{\mathrm{d} L(v)}{\mathrm{d} v}=\sum _{i=1}^nf(x_i,y_i)-\sum_{i=1}^{n}\sum_{y'\in \mathcal Y}f(x_i,y')p(y'|x_i;v)-C\cdot sign(v_k)$$
+	So $sign(v_1)=sign(v_2)$ or $v_1=v_2=0$\\
+	
+\end{enumerate}
+
+
+
+\section*{Question 2}
+$$\frac{\mathrm{d} L(v)}{\mathrm{d} v_k}=\sum _{i=1}^nf_k(x_i,y_i)-\sum_{i=1}^{n}\sum_{y'\in \mathcal Y}f_k(x_i,y')p(y'|x_i;v)$$
+$v^*$ is the optimal solution to the equation above, so\\
+$$\sum _{i=1}^nf_k(x_i,y_i)-\sum_{i=1}^{n}\sum_{y'\in \mathcal Y}f_k(x_i,y')p(y'|x_i;v^*)=0$$
+For a particular bigram $(w_1,w_2)$,it will only fit feature k, so
+$$\sum _{i=1}^nf(w_1,w_2)=count(w_1,w_2)$$
+Because only when $y=w_2$, $f_k=1$,otherwise, $f_k=0$, so \\
+$$\sum_{i=1}^{n}\sum_{y'\in \mathcal Y}f_k(x_i,y')p(y'|x_i;v^*)=\sum_{i=1}^{n}f_k(x_i,w_2)p(w_2|x_i;v^*)$$
+Only when $x=w_1$, $f_k=1$, otherwise, $f_k=0$\\
+$$\sum_{i=1}^{n}f_k(x_i,w_2)p(w_2|x_i;v^*)=\sum_{x=w_1}f_k(w_1,w_2)p(w_2|w_1,v^*)=p(w_2|w_2,v^*)\sum_{x=w_1}f_k(w_1,w_2)$$
+Here, $f_k(w_1,w_2)=1$, so \\
+$$\sum_{x=w_1}f_k(w_1,w_2)=count(w_1)$$
+So\\
+$$count(w_1,w_2)-count(w_1)\cdot p(w_2|w_1;v^*)=0$$
+$$p(w_2|w_1;v^*)=\frac{count(w_1,w_2)}{count(w_1)}$$
+
+
+\section*{Question 3}
+\begin{enumerate}
+	\item 
+	$f_1=\begin{cases}
+		1 & \text{ if } y=x \\ 
+		0 & \text{ if } y\neq x 
+	\end{cases}$\\
+	$ f_2=\begin{cases}
+	1 & \text{ if } y=\text{reverse of x} \\ 
+	0 & \text{ if } y\neq \text{reverse of x}
+	\end{cases}$
+	
+	\item 
+	Suppose the size of $\mathcal {V'}$ is $|\mathcal {V'}|$\\
+	$$P (the|the)=\frac{e^{v_1}}{e^{v_1}+e^{v_2}+e^0\cdot (|\mathcal{V'}|-2)}=\frac{e^{v_1}}{e^{v_1}+e^{v_2}+|\mathcal{V'}|-2}$$
+	$$P (eht|the)=\frac{e^{v_2}}{e^{v_1}+e^{v_2}+|\mathcal{V'}|-2}$$
+	$$P (dog|the)=\frac{1}{(e^{v_1}+e^{v_2}+|\mathcal{V'}|-2)}$$
+	
+	\item
+	According to the above, we have:
+	$$P (the|the)=\frac{e^{v_1}}{e^{v_1}+e^{v_2}+|\mathcal{V'}|-2}=0.4$$
+	$$P (eht|the)=\frac{e^{v_2}}{e^{v_1}+e^{v_2}+|\mathcal{V'}|-2}=0.3$$
+	$$P (dog|the)=\frac{1}{e^{v_1}+e^{v_2}+|\mathcal{V'}|-2}=\frac{0.3}{|\mathcal{V'}|-2}$$
+	so
+	$$v_1=\text{log}\frac{8|\mathcal{V'}|-4}{3}$$
+	$$v_2=\text{log}(|\mathcal{V'}|-2)$$
+\end{enumerate}
+
+
+
+
+
+
+
+% --------------------------------------------------------------
+%     You don't have to mess with anything below this line.
+% --------------------------------------------------------------
+\end{document}
